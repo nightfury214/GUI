@@ -59,8 +59,16 @@ class Ui:
                 case _:
                     raise TypeError(f"{element} is not a RADIO element")
 
-    def get_value(self, element: UiElement) -> str|int|None:
-        pass
+    def get_value(self, element: UiElement) -> str | int | None:
+        match element:
+            case UiElement.SELECT_PATIENT:
+                return self.patient_select.get()
+            case UiElement.SELECT_CONTROL:
+                return self.control_select.get()
+            case UiElement.RADIO_PLOT:
+                return self.graph_radio.get()
+            case _:
+                raise TypeError(f"{element} is not gettable (SELECT or RADIO)")
 
     def set_element(self, element: UiElement, value: str):
         match element:
@@ -81,13 +89,15 @@ class Ui:
 
     def _patient_select(self):
         f = askopenfilename()
-        self.patient_select.config(text=f"Patient: {basename(f)}")
+        self.patient_select.set(f)
+        self.patient_select_button.config(text=f"Patient: {basename(f)}")
         for c in self.select_patient_callbacks:
             c(f)
 
     def _control_select(self):
         f = askopenfilename()
-        self.control_select.config(text=f"Control: {basename(f)}")
+        self.control_select.set(f)
+        self.control_select_button.config(text=f"Control: {basename(f)}")
         for c in self.select_control_callbacks:
             c(f)
 
@@ -110,10 +120,13 @@ class Ui:
         file_sel_frame = Frame(root, padx=10, pady=10)
         file_sel_frame.grid(row=0, column=0, sticky="W")
 
-        self.patient_select = Button(file_sel_frame, text="Select patient", command=self._patient_select)
-        self.patient_select.grid(row=0, sticky="W")
-        self.control_select = Button(file_sel_frame, text="Select control", command=self._control_select)
-        self.control_select.grid(row=1, sticky="W")
+        self.patient_select = StringVar(file_sel_frame)
+        self.patient_select_button = Button(file_sel_frame, text="Select patient", command=self._patient_select)
+        self.patient_select_button.grid(row=0, sticky="W")
+
+        self.control_select = StringVar(file_sel_frame)
+        self.control_select_button = Button(file_sel_frame, text="Select control", command=self._control_select)
+        self.control_select_button.grid(row=1, sticky="W")
 
         gps_calc_frame = Frame(root, padx=10, pady=10)
         gps_calc_frame.grid(row=0, column=1, sticky="W")
@@ -158,7 +171,7 @@ class Ui:
 
         graph_radio_frame = Frame(root)
         graph_radio_frame.grid(row=1, column=1, sticky="W")
-        self.graph_radio = IntVar()
+        self.graph_radio = IntVar(value=1)
 
         Radiobutton(graph_radio_frame,
                     text="Show graphs",
