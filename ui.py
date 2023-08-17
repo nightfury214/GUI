@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.filedialog import askopenfilename
+from os.path import basename
 from typing import Callable
 from enum import Enum
 
@@ -80,11 +81,13 @@ class Ui:
 
     def _patient_select(self):
         f = askopenfilename()
+        self.patient_select.config(text=f"Patient: {basename(f)}")
         for c in self.select_patient_callbacks:
             c(f)
 
     def _control_select(self):
         f = askopenfilename()
+        self.control_select.config(text=f"Control: {basename(f)}")
         for c in self.select_control_callbacks:
             c(f)
 
@@ -143,12 +146,13 @@ class Ui:
         graph_control_frame = Frame(root, padx=10, pady=10)
         graph_control_frame.grid(row=1, column=0, sticky="W")
 
-        self.select_graph = StringVar(graph_control_frame, "Select")
+        self.select_graph = StringVar(graph_control_frame, "Select angle")
         graph_dropdown = OptionMenu(graph_control_frame,
                                     self.select_graph,
-                                    "option",
-                                    "other option",
-                                    "other other option",
+                                    "Hip flex / ext",
+                                    "Knee flex / ext",
+                                    "Pelvic tilt",
+                                    "Ankle dors / plant",
                                     command=lambda x: [c(x) for c in self.select_graph_callbacks])
         graph_dropdown.grid(column=0, row=0, sticky="W")
 
