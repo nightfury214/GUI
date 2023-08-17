@@ -2,18 +2,11 @@ from tkinter import *
 from tkinter.filedialog import askopenfilename
 from typing import Callable
 from enum import Enum
-from inspect import signature
 
-
-def example_callback():
-    print("yay it works")
-
-
-def example_callback_param(p: str):
-    print(f"yayyy {p}")
-
-def example_callback_int(p: int):
-    print(f"yayyy {p}")
+import matplotlib
+matplotlib.use("TkAgg")
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+from matplotlib.figure import Figure
 
 
 class UiElement(Enum):
@@ -28,6 +21,15 @@ class UiElement(Enum):
 
 
 class Ui:
+    def plot(self, figure: Figure):
+        self.canvas = FigureCanvasTkAgg(figure, master=self.graph)
+        self.canvas.draw()
+        self.canvas.get_tk_widget().pack()
+
+        self.toolbar = NavigationToolbar2Tk(self.canvas, self.graph)
+        self.toolbar.update()
+        self.canvas.get_tk_widget().pack()
+
     def add_select_callback(self, element: UiElement, *callbacks: Callable[[str], None]):
         for c in callbacks:
             match element:
@@ -76,7 +78,6 @@ class Ui:
             case _:
                 raise TypeError(f"{element} is not a OUT element")
 
-
     def _patient_select(self):
         f = askopenfilename()
         for c in self.select_patient_callbacks:
@@ -93,12 +94,9 @@ class Ui:
     def __init__(self):
         self.select_patient_callbacks: list[Callable[[str], None]] = []
         self.select_control_callbacks: list[Callable[[str], None]] = []
-        self.button_calc_callbacks: list[Callable[[None], None]] = [example_callback, example_callback]
+        self.button_calc_callbacks: list[Callable[[None], None]] = []
         self.select_graph_callbacks: list[Callable[[str], None]] = []
-        self.radio_plot_callbacks: list[Callable[[int], None]] = [example_callback_int]
-
-        self.add_select_callback(UiElement.SELECT_GRAPH, example_callback_param)
-        self.add_select_callback(UiElement.SELECT_PATIENT, example_callback_param)
+        self.radio_plot_callbacks: list[Callable[[int], None]] = []
 
         self.win = Tk()
         self.win.title("GPS Calculator")
@@ -173,5 +171,5 @@ class Ui:
                     command=lambda: [c(self.graph_radio.get()) for c in self.radio_plot_callbacks]
                     ).pack(anchor="w")
 
-        graph_frame = Frame(root, width=400, height=300, padx=10, pady=10, background="black")
-        graph_frame.grid(row=2, columnspan=2)
+        self.graph = Frame(root, width=400, height=300, padx=10, pady=10, background="black")
+        self.graph.grid(row=2, columnspan=2)
