@@ -74,14 +74,17 @@ class Ui:
         match element:
             case UiElement.OUT_LGPS:
                 self.lgps_output.config(state=NORMAL)
+                self.lgps_output.delete(0, END)
                 self.lgps_output.insert(END, value)
                 self.lgps_output.config(state=DISABLED)
             case UiElement.OUT_RGPS:
                 self.rgps_output.config(state=NORMAL)
+                self.rgps_output.delete(0, END)
                 self.rgps_output.insert(END, value)
                 self.rgps_output.config(state=DISABLED)
             case UiElement.OUT_GPS:
                 self.gps_output.config(state=NORMAL)
+                self.gps_output.delete(0, END)
                 self.gps_output.insert(END, value)
                 self.gps_output.config(state=DISABLED)
             case _:
