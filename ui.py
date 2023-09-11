@@ -91,14 +91,14 @@ class Ui:
                 raise TypeError(f"{element} is not a OUT element")
 
     def _patient_select(self):
-        f = askopenfilename()
+        f = askopenfilename(filetypes=[("Excel files", ".xlsx .xls")])
         self.patient_select.set(f)
         self.patient_select_button.config(text=f"Patient: {basename(f)}")
         for c in self.select_patient_callbacks:
             c(f)
 
     def _control_select(self):
-        f = askopenfilename()
+        f = askopenfilename(filetypes=[("Excel files", ".xlsx .xls")])
         self.control_select.set(f)
         self.control_select_button.config(text=f"Control: {basename(f)}")
         for c in self.select_control_callbacks:
