@@ -45,6 +45,12 @@ def show_graph(path):
     ax.plot(State.patient.LKneeFlex_x)
 
     State.ui.plot(fig)
+    
+def radio_choice(choice):
+    if choice == 1:
+        print("you selected graph")
+    if choice == 2:
+        print("you selected GPS")
 
 if __name__ == '__main__':
     ui = Ui()
@@ -54,4 +60,8 @@ if __name__ == '__main__':
     ui.add_button_callback(UiElement.BUTTON_CALC, calc_GPS)
     
     ui.add_select_callback(UiElement.SELECT_GRAPH, show_graph)
+    
+    ui.add_radio_callback(UiElement.RADIO_PLOT, radio_choice)
+    
+    
     ui.mainloop()
