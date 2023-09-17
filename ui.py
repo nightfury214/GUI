@@ -72,6 +72,8 @@ class Ui:
                 return self.patient_select.get()
             case UiElement.SELECT_CONTROL:
                 return self.control_select.get()
+            case UiElement.SELECT_GRAPH:
+                return self.select_graph.get()
             case UiElement.RADIO_PLOT:
                 return self.graph_radio.get()
             case _:
