@@ -100,6 +100,41 @@ def radio_choice(choice):
         print("you selected graph")
     if choice == 2:
         print("you selected GPS")
+        left=[]
+        right=[]
+        angles=[]
+        for angle in State.control.columns:
+            left.append(State.map_GPS['L'+angle][0])
+            right.append(State.map_GPS['R'+angle][0])
+            angles.append(angle)
+        
+        x=np.arange(9)
+
+        GPS = {
+            'Left': left,
+            'Right': right,
+        }
+        
+        width = 0.25  # the width of the bars
+        multiplier = 0
+        
+        fig, ax = plt.subplots(layout='constrained')
+        
+        for attribute, measurement in GPS.items():
+            offset = width * multiplier
+            rects = ax.bar(x + offset, measurement, width, label=attribute)
+#            ax.bar_label(rects, padding=3)
+            multiplier += 1
+        
+        # Add some text for labels, title and custom x-axis tick labels, etc.
+        ax.set_ylabel('GPS')
+        ax.set_title('GPS map')
+        ax.set_xticks(x + width, angles)
+        ax.legend(loc='upper left', ncols=2)
+        ax.set_ylim(0, 20)
+        
+        
+        State.ui.plot(fig)
 
 if __name__ == '__main__':
     ui = Ui()
