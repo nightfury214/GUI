@@ -2,7 +2,15 @@ from ui import Ui, UiElement
 import pandas as pd ### not in requirements file - need to add this
 import matplotlib.pyplot as plt
 
+LGPS_list=['LPelTilt','LHipFlex','LKneeFlex','LAnkDors',
+           'LPelObl','LHipAbd','LPelRot','LHipRot','LFootProg']
+RGPS_list=['RPelTilt','RHipFlex','RKneeFlex','RAnkDors',
+           'RPelObl','RHipAbd','RPelRot','RHipRot','RFootProg']
 
+GPS_list=['LPelTilt','LHipFlex','LKneeFlex','LAnkDors',
+           'LPelObl','LHipAbd','LPelRot','LHipRot','LFootProg',
+           'RHipFlex','RKneeFlex','RAnkDors',
+           'RHipAbd','RHipRot','RFootProg']
 
 
 class State:
