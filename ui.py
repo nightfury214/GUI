@@ -171,10 +171,10 @@ class Ui:
         self.select_graph = StringVar(graph_control_frame, "Select angle")
         graph_dropdown = OptionMenu(graph_control_frame,
                                     self.select_graph,
-                                    "Hip flex / ext",
-                                    "Knee flex / ext",
-                                    "Pelvic tilt",
-                                    "Ankle dors / plant",
+                                    "PelTilt",
+                                    "HipFlex",
+                                    "KneeFlex",
+                                    "AnkDors",
                                     command=lambda x: [c(x) for c in self.select_graph_callbacks])
         graph_dropdown.grid(column=0, row=0, sticky="W")
 
