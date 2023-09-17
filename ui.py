@@ -10,6 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolb
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 
+
 class UiElement(Enum):
     SELECT_PATIENT = 0
     SELECT_CONTROL = 1
@@ -25,10 +26,10 @@ class Ui:
     def plot(self, figure: Figure):
         try:
             self.canvas.get_tk_widget().forget()
-            plt.close('all')
+            plt.close("all")
         except AttributeError:
-            print(' no canvas')
-            
+            pass
+
         self.canvas = FigureCanvasTkAgg(figure, master=self.graph)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack()
@@ -61,7 +62,7 @@ class Ui:
         for c in callbacks:
             match element:
                 case UiElement.RADIO_PLOT:
-                    self.radio_plot_callbacks.append(c)
+                    self.button_calc_callbacks.append(c)
                 case _:
                     raise TypeError(f"{element} is not a RADIO element")
 
@@ -71,6 +72,8 @@ class Ui:
                 return self.patient_select.get()
             case UiElement.SELECT_CONTROL:
                 return self.control_select.get()
+            case UiElement.SELECT_GRAPH:
+                return self.select_graph.get()
             case UiElement.RADIO_PLOT:
                 return self.graph_radio.get()
             case _:
@@ -97,14 +100,14 @@ class Ui:
                 raise TypeError(f"{element} is not a OUT element")
 
     def _patient_select(self):
-        f = askopenfilename(filetypes=[("Excel files", ".xlsx .xls")])
+        f = askopenfilename()
         self.patient_select.set(f)
         self.patient_select_button.config(text=f"Patient: {basename(f)}")
         for c in self.select_patient_callbacks:
             c(f)
 
     def _control_select(self):
-        f = askopenfilename(filetypes=[("Excel files", ".xlsx .xls")])
+        f = askopenfilename()
         self.control_select.set(f)
         self.control_select_button.config(text=f"Control: {basename(f)}")
         for c in self.select_control_callbacks:
@@ -171,10 +174,10 @@ class Ui:
         self.select_graph = StringVar(graph_control_frame, "Select angle")
         graph_dropdown = OptionMenu(graph_control_frame,
                                     self.select_graph,
-                                    "PelTilt",
-                                    "HipFlex",
-                                    "KneeFlex",
-                                    "AnkDors",
+                                    "Hip flex / ext",
+                                    "Knee flex / ext",
+                                    "Pelvic tilt",
+                                    "Ankle dors / plant",
                                     command=lambda x: [c(x) for c in self.select_graph_callbacks])
         graph_dropdown.grid(column=0, row=0, sticky="W")
 
