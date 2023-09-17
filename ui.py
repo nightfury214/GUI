@@ -8,6 +8,7 @@ import matplotlib
 matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
 
 
 class UiElement(Enum):
@@ -23,6 +24,12 @@ class UiElement(Enum):
 
 class Ui:
     def plot(self, figure: Figure):
+        try:
+            self.canvas.get_tk_widget().forget()
+            plt.close("all")
+        except AttributeError:
+            pass
+
         self.canvas = FigureCanvasTkAgg(figure, master=self.graph)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack()
