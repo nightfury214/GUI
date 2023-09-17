@@ -27,8 +27,8 @@ class Ui:
             self.canvas.get_tk_widget().forget()
             plt.close('all')
         except AttributeError:
-            print(' no canvas')
-            
+            pass
+
         self.canvas = FigureCanvasTkAgg(figure, master=self.graph)
         self.canvas.draw()
         self.canvas.get_tk_widget().pack()
