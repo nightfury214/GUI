@@ -25,14 +25,14 @@ class State:
 def load_patient_file(path):
     # code to load data goes here
     State.patient=pd.read_excel(path)
-    print(State.patient.LKneeFlex_x)
+    print(State.patient['LKneeFlex'])
     # end of your code
     print(path)
     
 def load_control_file(path):
     # code to load data goes here
     State.control=pd.read_excel(path)
-    print(State.control.LKneeFlex_x)
+    print(State.control['KneeFlex'])
     # end of your code
     print(path)
     
@@ -85,10 +85,13 @@ def calc_GPS():
     # print(path)
     
 def show_graph(path):
+    
     fig,ax = plt.subplots()
-
-    ax.plot(State.control.LKneeFlex_x)
-    ax.plot(State.patient.LKneeFlex_x)
+    # need to choose which graph to plot
+    ax.plot(State.control[path],'b')
+    ax.plot(State.patient['L'+path],'r')
+    ax.plot(State.patient['R'+path],'g')
+    print(path)
 
     State.ui.plot(fig)
     
