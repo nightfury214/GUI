@@ -24,21 +24,14 @@ class State:
 
 def load_patient_file(path):
     # code to load data goes here
-    State.patient=pd.read_excel(path)
-    print(State.patient['LKneeFlex'])
-    # end of your code
-    print(path)
+
     
 def load_control_file(path):
     # code to load data goes here
-    State.control=pd.read_excel(path)
-    print(State.control['KneeFlex'])
-    # end of your code
-    print(path)
+
     
 def calc_GPS():
-    # code to load data goes here
-    # State.control=pd.read_excel(path)
+
     data=[]
     col=[]
     for angle in State.control.columns:
@@ -71,29 +64,18 @@ def calc_GPS():
     col.append('GPS')
     
     State.map_GPS=pd.DataFrame([data],columns=col)
-#    print(State.map_GPS)
-#    print(State.map_GPS['GPS'])
-#    print(str(State.map_GPS['GPS']))
-#    print("{:.2f}".format(State.map_GPS['GPS'][0]))
-#   
-#    GPS = State.patient['LKneeFlex'] - State.control['KneeFlex']
-#    State.mapGPS = [5,9,3,5]
+
     State.ui.set_element(UiElement.OUT_GPS,"{:.2f}".format(State.map_GPS['GPS'][0]))
     State.ui.set_element(UiElement.OUT_LGPS,"{:.2f}".format(State.map_GPS['LGPS'][0]))
     State.ui.set_element(UiElement.OUT_RGPS,"{:.2f}".format(State.map_GPS['RGPS'][0]))
-#    # end of your code
-    # print(path)
+
     
 def show_graph(path):
-    
+    # path is the name of the angle from the drop down list
     fig,ax = plt.subplots()
-    # need to choose which graph to plot
-    ax.plot(State.control[path],'b')
-    ax.plot(State.patient['L'+path],'r')
-    ax.plot(State.patient['R'+path],'g')
-    print(path)
+    # your code to plot 3 line (patient left in red, patient right in green, control in blue)
 
-    State.ui.plot(fig)
+    State.ui.plot(fig) # this will send the plot to the canvas
     
 def radio_choice(choice):
     if choice == 1:
