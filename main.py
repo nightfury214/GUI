@@ -20,6 +20,11 @@ class State:
     map_GPS = []
     ui=[]
         
+def GPS(data):
+    sq_sum=0
+    for i in range(len(data)):
+        sq_sum=sq_sum+ np.power((data[i]),2)
+    return np.power(sq_sum/len(data),0.5)
     
 
 def load_patient_file(path):
