@@ -41,36 +41,39 @@ def calc_GPS():
     # code to load data goes here
     data=[]
     col=[]
-    for angle in State.control.columns:
-        for side in ['L','R']:
-            data.append(rms(State.patient[side+angle]-State.control[angle]))
-            col.append(side+angle)
-    State.map_GPS=pd.DataFrame([data],columns=col)
+    try:
+        for angle in State.control.columns:
+            for side in ['L','R']:
+                data.append(rms(State.patient[side+angle]-State.control[angle]))
+                col.append(side+angle)
+        State.map_GPS=pd.DataFrame([data],columns=col)
+    
+        map_list=[]
+        for angle in LGPS_list:
+            map_list.append(State.map_GPS[angle])
+        data.append(rms(map_list)[0])
+        col.append('LGPS')
+        
+        map_list=[]
+        for angle in RGPS_list:
+            map_list.append(State.map_GPS[angle])
+        data.append(rms(map_list)[0])
+        col.append('RGPS')
+        
+        map_list=[]
+        for angle in GPS_list:
+            map_list.append(State.map_GPS[angle])
+        data.append(rms(map_list)[0])
+        col.append('GPS')
+        
+        State.map_GPS=pd.DataFrame([data],columns=col)
+    
+        State.ui.set_element(UiElement.OUT_GPS,"{:.2f}".format(State.map_GPS['GPS'][0]))
+        State.ui.set_element(UiElement.OUT_LGPS,"{:.2f}".format(State.map_GPS['LGPS'][0]))
+        State.ui.set_element(UiElement.OUT_RGPS,"{:.2f}".format(State.map_GPS['RGPS'][0]))
 
-    map_list=[]
-    for angle in LGPS_list:
-        map_list.append(State.map_GPS[angle])
-    data.append(rms(map_list)[0])
-    col.append('LGPS')
-    
-    map_list=[]
-    for angle in RGPS_list:
-        map_list.append(State.map_GPS[angle])
-    data.append(rms(map_list)[0])
-    col.append('RGPS')
-    
-    map_list=[]
-    for angle in GPS_list:
-        map_list.append(State.map_GPS[angle])
-    data.append(rms(map_list)[0])
-    col.append('GPS')
-    
-    State.map_GPS=pd.DataFrame([data],columns=col)
-
-    State.ui.set_element(UiElement.OUT_GPS,"{:.2f}".format(State.map_GPS['GPS'][0]))
-    State.ui.set_element(UiElement.OUT_LGPS,"{:.2f}".format(State.map_GPS['LGPS'][0]))
-    State.ui.set_element(UiElement.OUT_RGPS,"{:.2f}".format(State.map_GPS['RGPS'][0]))
-#    # end of your code
+    except AttributeError:
+        print('no data to calculate do calculation')
 
     
 def show_graph(path):
@@ -85,41 +88,45 @@ def radio_choice(choice):
         print("you selected graph")
     if choice == 2:
         print("you selected GPS")
-        left=[]
-        right=[]
-        angles=[]
-        for angle in State.control.columns:
-            left.append(State.map_GPS['L'+angle][0])
-            right.append(State.map_GPS['R'+angle][0])
-            angles.append(angle)
-        
-        x=np.arange(9)
-
-        GPS = {
-            'Left': left,
-            'Right': right,
-        }
-        
-        width = 0.25  # the width of the bars
-        multiplier = 0
-        
-        fig, ax = plt.subplots(layout='constrained')
-        
-        for attribute, measurement in GPS.items():
-            offset = width * multiplier
-            rects = ax.bar(x + offset, measurement, width, label=attribute)
-#            ax.bar_label(rects, padding=3)
-            multiplier += 1
-        
-        # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_ylabel('GPS')
-        ax.set_title('GPS map')
-        ax.set_xticks(x + width, angles)
-        ax.legend(loc='upper left', ncols=2)
-        ax.set_ylim(0, 20)
-        
-        
-        State.ui.plot(fig)
+        try:
+            left=[]
+            right=[]
+            angles=[]
+            for angle in State.control.columns:
+                left.append(State.map_GPS['L'+angle][0])
+                right.append(State.map_GPS['R'+angle][0])
+                angles.append(angle)
+            
+            x=np.arange(9)
+    
+            GPS = {
+                'Left': left,
+                'Right': right,
+            }
+            
+            width = 0.25  # the width of the bars
+            multiplier = 0
+            
+            fig, ax = plt.subplots(layout='constrained')
+            
+            for attribute, measurement in GPS.items():
+                offset = width * multiplier
+                rects = ax.bar(x + offset, measurement, width, label=attribute)
+    #            ax.bar_label(rects, padding=3)
+                multiplier += 1
+            
+            # Add some text for labels, title and custom x-axis tick labels, etc.
+            ax.set_ylabel('GPS')
+            ax.set_title('GPS map')
+            ax.set_xticks(x + width, angles)
+            ax.legend(loc='upper left', ncols=2)
+            ax.set_ylim(0, 20)
+            
+            
+            State.ui.plot(fig)
+            
+        except AttributeError:
+            print('No data to plot')
 
 if __name__ == '__main__':
     ui = Ui()

@@ -62,7 +62,7 @@ class Ui:
         for c in callbacks:
             match element:
                 case UiElement.RADIO_PLOT:
-                    self.button_calc_callbacks.append(c)
+                    self.radio_plot_callbacks.append(c)
                 case _:
                     raise TypeError(f"{element} is not a RADIO element")
 
